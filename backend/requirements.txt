@@ -1,0 +1,10 @@
+PyPDF2
+python-docx
+flask
+flask-cors
+firebase-admin
+python-dotenv
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+requests
