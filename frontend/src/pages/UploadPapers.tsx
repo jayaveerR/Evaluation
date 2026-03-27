@@ -30,9 +30,15 @@ export default function UploadPapers() {
       try {
         const res = await fetch('http://localhost:5000/api/exams');
         const data = await res.json();
-        setExams(data);
+        if (res.ok && Array.isArray(data)) {
+          setExams(data);
+        } else {
+          console.error('API Error:', data);
+          setExams([]);
+        }
       } catch (err) {
         console.error('Failed to fetch exams', err);
+        setExams([]);
       }
     }
     fetchData();

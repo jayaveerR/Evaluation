@@ -412,8 +412,8 @@ def evaluate_confirmed_data():
             def normalize(t):
                 if not t: return ""
                 import re
-                # 1. Replace all non-alphanumeric with spaces (including hyphens)
-                t = re.sub(r'[^a-zA-Z0-9\s]', ' ', t.lower())
+                # 1. Strip symbols and punctuation but keep all UNICODE letters and numbers
+                t = re.sub(r'[^\w\s]', ' ', t, flags=re.UNICODE).lower()
                 # 2. Collapse multiple spaces and strip
                 return " ".join(t.split()).strip()
 
@@ -435,14 +435,14 @@ def evaluate_confirmed_data():
                 if len(m_words) > 0:
                     similarity = (len(intersection) / len(m_words)) * 100
                     
-                    if similarity >= 80:
+                    if similarity >= 100:
                         match_pct = 100
                         q_score = int(model_q.get('maxMarks', 10))
-                        feedback = "Full semantic alignment with model key (Full Marks)."
-                    elif similarity >= 40:
+                        feedback = "Full semantic alignment (Full Marks)."
+                    elif similarity >= 30:
                         match_pct = 50
-                        q_score = int(model_q.get('maxMarks', 10)) / 2
-                        feedback = "Partial semantic match detected. Some mistakes (Half Marks)."
+                        q_score = int(int(model_q.get('maxMarks', 10)) / 2)
+                        feedback = "Partial semantic match detected (Half Marks)."
                     else:
                         match_pct = 0
                         q_score = 0
