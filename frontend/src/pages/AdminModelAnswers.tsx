@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { API_BASE_URL } from '@/lib/api-config';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,7 +44,7 @@ export default function AdminModelAnswers() {
   const { data: exams = [], isLoading: examsLoading } = useQuery({
     queryKey: ['exams'],
     queryFn: async () => {
-      const res = await fetch('http://localhost:5000/api/exams');
+      const res = await fetch(`${API_BASE_URL}/api/exams`);
       if (!res.ok) throw new Error('Failed to fetch exams');
       const data = await res.json();
       if (data.length > 0 && !selectedExamId) {
@@ -57,7 +58,7 @@ export default function AdminModelAnswers() {
   const { data: questions = [], isLoading: questionsLoading } = useQuery({
     queryKey: ['questions', selectedExamId],
     queryFn: async () => {
-      const res = await fetch(`http://localhost:5000/api/exams/${selectedExamId}/questions`);
+      const res = await fetch(`${API_BASE_URL}/api/exams/${selectedExamId}/questions`);
       if (!res.ok) throw new Error('Failed to fetch questions');
       return res.json() as Promise<Question[]>;
     },
@@ -66,7 +67,7 @@ export default function AdminModelAnswers() {
 
   const createMutation = useMutation({
     mutationFn: async (q: any) => {
-      const res = await fetch(`http://localhost:5000/api/exams/${selectedExamId}/questions`, {
+      const res = await fetch(`${API_BASE_URL}/api/exams/${selectedExamId}/questions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(q)
@@ -88,7 +89,7 @@ export default function AdminModelAnswers() {
 
   const deleteMutation = useMutation({
     mutationFn: async (questionId: string) => {
-      const res = await fetch(`http://localhost:5000/api/exams/${selectedExamId}/questions/${questionId}`, {
+      const res = await fetch(`${API_BASE_URL}/api/exams/${selectedExamId}/questions/${questionId}`, {
         method: 'DELETE'
       });
       if (!res.ok) throw new Error('Failed to delete question');
@@ -210,7 +211,7 @@ export default function AdminModelAnswers() {
         };
       });
 
-      const res = await fetch(`http://localhost:5000/api/evaluate-confirm`, {
+      const res = await fetch(`${API_BASE_URL}/api/evaluate-confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

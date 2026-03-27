@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '@/lib/api-config';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -14,7 +15,7 @@ export default function StudentResultDetail() {
   useEffect(() => {
     const fetchDetail = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/evaluations/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/evaluations/${id}`);
         if (!response.ok) throw new Error('Evaluation not found');
         const evalData = await response.json();
         setData(evalData);

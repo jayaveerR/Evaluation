@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import DashboardLayout from '@/components/DashboardLayout';
+import { API_BASE_URL } from '@/lib/api-config';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,7 +29,7 @@ export default function UploadPapers() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const res = await fetch('http://localhost:5000/api/exams');
+        const res = await fetch(`${API_BASE_URL}/api/exams`);
         const data = await res.json();
         if (res.ok && Array.isArray(data)) {
           setExams(data);
@@ -51,7 +52,7 @@ export default function UploadPapers() {
     }
     setSearchingStudent(true);
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${rollNumber}`);
+      const response = await fetch(`${API_BASE_URL}/api/users/${rollNumber}`);
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || 'Student not found');
       setStudentDetails(data);
@@ -86,7 +87,7 @@ export default function UploadPapers() {
       formData.append('exam_id', selectedExam);
       files.forEach((file) => formData.append('files', file));
 
-      const response = await fetch('http://localhost:5000/api/extract', {
+      const response = await fetch(`${API_BASE_URL}/api/extract`, {
         method: 'POST',
         body: formData
       });
@@ -108,7 +109,7 @@ export default function UploadPapers() {
     if (!extractedData) return;
     setEvaluating(true);
     try {
-      const response = await fetch('http://localhost:5000/api/evaluate-confirm', {
+      const response = await fetch(`${API_BASE_URL}/api/evaluate-confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -134,7 +135,7 @@ export default function UploadPapers() {
     if (!studentDetails || !result) return;
     setRecording(true);
     try {
-      const response = await fetch('http://localhost:5000/api/record-ledger', {
+      const response = await fetch(`${API_BASE_URL}/api/record-ledger`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -147,7 +148,6 @@ export default function UploadPapers() {
       if (!response.ok) throw new Error(data.error || 'Failed to record results');
 
       toast.success('Marks recorded successfully for ' + studentDetails.fullName);
-      // Optional: Navigate or reset
     } catch (err: any) {
       toast.error(err.message || 'Saving failed');
     } finally {
@@ -169,7 +169,6 @@ export default function UploadPapers() {
             </div>
             
             <div className="p-8 space-y-8">
-              {/* Result Attribution Header */}
               <div className="flex flex-col md:flex-row items-center justify-between bg-primary/5 p-6 rounded-2xl border-2 border-primary/20 gap-6">
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30">
@@ -267,7 +266,6 @@ export default function UploadPapers() {
                       </div>
 
                       <div className="p-6 grid gap-6 md:grid-cols-2 bg-gradient-to-br from-background to-secondary/10">
-                        {/* Comparison */}
                         <div className="space-y-3">
                           <div className="space-y-1.5">
                             <span className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
